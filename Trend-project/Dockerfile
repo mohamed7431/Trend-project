@@ -1,13 +1,11 @@
-# Stage 1: Build
-FROM node:20 AS build
-WORKDIR /app
-COPY app/package*.json ./
-RUN npm install
-COPY app/ .
-RUN npm run build
-
-# Stage 2: Run with Nginx
+# Use Nginx to serve static files
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy your static app files into Nginx web root
+COPY app/ /usr/share/nginx/html
+
+# Expose port 80
 EXPOSE 80
+
+# Run Nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
